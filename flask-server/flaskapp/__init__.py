@@ -24,17 +24,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    # register the database commands
+    from . import db
 
-    # a simple page that says hello
-    @app.route('/game')
-    def game():
-        #return 'Game!'
-        return render_template("unity-webgl/index.html")
+    db.init_app(app)
 
+    from . import auth,game,intro
+    app.register_blueprint(auth.bp)
+    app.register_blueprint(game.bp)
+    app.register_blueprint(intro.bp)
 
+    # app.add_url_rule("/", endpoint="index")
 
     return app
