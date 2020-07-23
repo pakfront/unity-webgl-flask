@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% for game in games %}
+    <article class="game">
+      <header>
+        <div>
+          <h1>{{ game['title'] }}</h1>
+          <div class="about">Game {{ game['gamename'] }} on {{ game['created'].strftime('%Y-%m-%d') }}</div>
+          players:
+          {% for player in players[game['id']] %}
+            {{ player['username'] }}
+          {% endfor %}
+          <P>open seats {{openseats|length}} :
+          {% for openseat in openseats[game['id']] %}
+            <a class="action" href="{{ url_for('game.join', id=openseat['id']) }}">slot {{ openseat['slot'] }}</a>
+          {% endfor %}
+          </P>
+          </div>
+      </header>
+      <p class="body">summary:{{ game['summary'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

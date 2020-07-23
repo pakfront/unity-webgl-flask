@@ -46,7 +46,7 @@ def init_db():
     from werkzeug.security import generate_password_hash
 
     user_ids = {}
-    for username in ('tim','mark','matt'):
+    for username in ('tim','mark','matt','stephan'):
         db.execute(
             "INSERT INTO user (username, password) VALUES (?, ?)",
             (username, generate_password_hash('test')),
@@ -62,6 +62,53 @@ def init_db():
             )
             .fetchone()
         )['id']
+
+    game_ids = {}
+    for gamename in ('game01','game02'):
+        db.execute(
+            "INSERT INTO game (gamename,summary,numplayers) VALUES (?,?,?)",
+            (gamename,"a summary", 3 ),
+        )
+        db.commit()
+
+        game = (
+            db.execute(
+                "SELECT id, numplayers"
+                " FROM game"
+                " WHERE gamename = ?",
+            (gamename,),
+            )
+            .fetchone()
+        )
+
+        game_ids[gamename] = game['id']
+
+        for i in range(0,game['numplayers']):
+        # for i in range(0,3):
+            db.execute(
+                "INSERT INTO player (game_id,slot) VALUES (?,?)",
+                (game['id'], str(i)),
+            )
+        db.commit()            
+
+
+    # for game,usernames in [
+    #     ('game01', ('tim','mark')),
+    #     ('game02', ('tim','matt')),
+    # ]:
+
+    #     slot = 0
+    #     for username in usernames:
+    #         user_id = user_ids[username]
+    #         db.execute(
+    #             "INSERT INTO player (user_id,game_id,slot) VALUES (?,?,?)",
+    #             (user_id, game_ids[game], slot),
+    #         )
+    #         slot += 1
+    #         db.commit()
+
+
+
 
 @click.command("init-db")
 @with_appcontext

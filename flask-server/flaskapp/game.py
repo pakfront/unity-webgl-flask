@@ -14,8 +14,50 @@ from flask import jsonify
 
 bp = Blueprint("game", __name__, url_prefix="/game")
 
-# a simple page that says hello
 @bp.route('/play')
+@login_required
 def game():
-    #return 'Game!'
     return render_template("game/play.html")
+
+@bp.route("/<int:id>/join") #, methods=("GET", "POST"))
+@login_required
+def join(id):
+    db = get_db()
+    # game = db.execute(
+    #     "SELECT username"
+    #     " FROM player p"
+    #     " JOIN user u" 
+    #     " ON p.user_id = u.id"
+    #     " WHERE game_id = (?)",(id,),
+    #     ).fetchall()
+
+    player = db.execute(
+        "SELECT p.id, slot, gamename, p.user_id"
+        " FROM player p"
+        " JOIN game g"
+        " ON p.game_id = g.id"
+        " WHERE p.id = (?)",(id,),
+        ).fetchone()
+
+    if player['user_id'] is not None:
+        return 'Error: Slot already filled'
+
+    user_id = g.user['id']    
+    db.execute(
+       "UPDATE player"
+       " SET user_id = ?"
+       " WHERE id = ?",(user_id, id,),
+    )
+
+    db.commit()
+
+    player = db.execute(
+        "SELECT p.id, slot, gamename, p.user_id"
+        " FROM player p"
+        " JOIN game g"
+        " ON p.game_id = g.id"
+        " WHERE p.id = (?)",(id,),
+        ).fetchone()
+    return jsonify(player)
+
+    
