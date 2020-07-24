@@ -66,14 +66,14 @@ def init_db():
     game_ids = {}
     for gamename in ('game01','game02'):
         db.execute(
-            "INSERT INTO game (gamename,summary,numplayers) VALUES (?,?,?)",
+            "INSERT INTO game (gamename,summary,playercount) VALUES (?,?,?)",
             (gamename,"a summary", 3 ),
         )
         db.commit()
 
         game = (
             db.execute(
-                "SELECT id, numplayers"
+                "SELECT id, playercount"
                 " FROM game"
                 " WHERE gamename = ?",
             (gamename,),
@@ -83,10 +83,10 @@ def init_db():
 
         game_ids[gamename] = game['id']
 
-        for i in range(0,game['numplayers']):
+        for i in range(0,game['playercount']):
         # for i in range(0,3):
             db.execute(
-                "INSERT INTO player (game_id,slot) VALUES (?,?)",
+                "INSERT INTO player (game_id,playernumber) VALUES (?,?)",
                 (game['id'], str(i)),
             )
         db.commit()            
@@ -97,14 +97,14 @@ def init_db():
     #     ('game02', ('tim','matt')),
     # ]:
 
-    #     slot = 0
+    #     playernumber = 0
     #     for username in usernames:
     #         user_id = user_ids[username]
     #         db.execute(
-    #             "INSERT INTO player (user_id,game_id,slot) VALUES (?,?,?)",
-    #             (user_id, game_ids[game], slot),
+    #             "INSERT INTO player (user_id,game_id,playernumber) VALUES (?,?,?)",
+    #             (user_id, game_ids[game], playernumber),
     #         )
-    #         slot += 1
+    #         playernumber += 1
     #         db.commit()
 
 

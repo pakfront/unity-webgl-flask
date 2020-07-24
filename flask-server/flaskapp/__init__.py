@@ -29,10 +29,11 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    from . import auth,game,intro
+    from . import auth,player,intro,game
     app.register_blueprint(auth.bp)
-    app.register_blueprint(game.bp)
+    app.register_blueprint(player.bp)
     app.register_blueprint(intro.bp)
+    app.register_blueprint(game.bp)
 
     app.add_url_rule("/", endpoint="index")
 

@@ -17,16 +17,18 @@ CREATE TABLE game (
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   summary TEXT NOT NULL,
   gamename TEXT NOT NULL,
-  numplayers INTEGER NOT NULL,
+  playercount INTEGER NOT NULL,
   turnnum INTEGER,
-  body TEXT
+  turndata TEXT
 );
 
 CREATE TABLE player (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   game_id INTEGER NOT NULL,
   user_id INTEGER,
-  slot INTEGER,
+  playernumber INTEGER,
+  commanddata TEXT,
+  viewdata TEXT,
   FOREIGN KEY (user_id) REFERENCES user (id),
   FOREIGN KEY (game_id) REFERENCES game (id)
 );

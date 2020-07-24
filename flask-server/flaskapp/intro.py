@@ -30,17 +30,18 @@ def index():
     players = {}
     for game in games:
         players[game['id']] = db.execute(
-        "SELECT username"
+        "SELECT p.id, playernumber, username, user_id, turnnum"
         " FROM player p"
         " JOIN user u" 
-        " ON p.user_id = u.id"
+        " JOIN game g" 
+        " ON p.user_id = u.id AND p.game_id = g.id"
         " WHERE game_id = (?)",(game['id'],),
         ).fetchall()
 
     openseats = {}
     for game in games:
         openseats[game['id']] = db.execute(
-        "SELECT id, slot"
+        "SELECT id, playernumber"
         " FROM player p"
         " WHERE p.user_id IS null AND game_id = (?)",(game['id'],),
         ).fetchall()
@@ -48,6 +49,8 @@ def index():
     if request.args.get('type') == 'json':
         # return jsonify(games)
         return jsonify(openseats)
+    print(players)
+    print(openseats)
 
     return render_template("intro/index.html",games=games, players=players, openseats=openseats)
     
@@ -63,7 +66,7 @@ def players():
     # ).fetchall()
 
     players = db.execute(
-        "SELECT p.id, gamename, p.user_id, slot"
+        "SELECT p.id, gamename, p.user_id, playernumber"
         " FROM player p"
         " JOIN game g" 
         " ON p.game_id = g.id"

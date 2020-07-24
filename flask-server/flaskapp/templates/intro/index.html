@@ -6,15 +6,23 @@
       <header>
         <div>
           <h1>{{ game['title'] }}</h1>
-          <div class="about">Game {{ game['gamename'] }} on {{ game['created'].strftime('%Y-%m-%d') }}</div>
-          players:
+          <div class="about">Game {{ game['gamename'] }} created {{ game['created'].strftime('%Y-%m-%d') }}</div>
+          {% if (players is defined) and players[game['id']] %}
+          players {{players[game['id']]|length}}:
           {% for player in players[game['id']] %}
-            {{ player['username'] }}
-          {% endfor %}
-          <P>open seats {{openseats|length}} :
+        {% if g.user['id'] == player['user_id'] %}
+        <a class="action" href="{{ url_for('player.submit', id=player['id']) }}">Submit Turn {{game['turnnum']}} </a>
+        {% else %}
+        <P>{{ player['username'] }}</P>
+        {% endif %}
+        {% endfor %}
+          {% endif %}
+          {% if (openseats is defined) and openseats[game['id']] %}
+          <P>open seats {{openseats[game['id']]|length}} :
           {% for openseat in openseats[game['id']] %}
-            <a class="action" href="{{ url_for('game.join', id=openseat['id']) }}">slot {{ openseat['slot'] }}</a>
+            <a class="action" href="{{ url_for('player.join', id=openseat['id']) }}">playernumber {{ openseat['playernumber'] }}</a>
           {% endfor %}
+          {% endif %}
           </P>
           </div>
       </header>

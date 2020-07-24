@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ player['title'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Title</label>
+    <label for="body">Orders</label>
+    <textarea name="commanddata" id="commanddata">{{ request.form['commanddata'] or player['commanddata'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+{% endblock %}
