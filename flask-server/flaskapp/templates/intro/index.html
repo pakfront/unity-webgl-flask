@@ -6,22 +6,27 @@
       <header>
         <div>
           <h1>{{ game['title'] }}</h1>
-          <div class="about">Game {{ game['gamename'] }} created {{ game['created'].strftime('%Y-%m-%d') }}</div>
+          <div class="about">Game {{ game['gamename'] }} created {{ game['created'].strftime('%Y-%m-%d') }}. Referee:{{game['username']}} </div>
+          {% if g.user['id'] == game['referee_id'] %}
+              <a class="action" href="{{ url_for('referee.turndata', id=game['id']) }}">Turndata {{game['turnnum']}} </a>
+              <a class="action" href="{{ url_for('referee.commanddata', id=game['id']) }}">Commanddata {{game['turnnum']}} </a>
+          {% endif %}
           {% if (players is defined) and players[game['id']] %}
-          players {{players[game['id']]|length}}:
-          {% for player in players[game['id']] %}
-        {% if g.user['id'] == player['user_id'] %}
-        <a class="action" href="{{ url_for('player.submit', id=player['id']) }}">Submit Turn {{game['turnnum']}} </a>
-        {% else %}
-        <P>{{ player['username'] }}</P>
-        {% endif %}
-        {% endfor %}
+            players {{players[game['id']]|length}}:
+            {% for player in players[game['id']] %}
+                {% if g.user['id'] == player['user_id'] %}
+                    <a class="action" href="{{ url_for('player.play', id=player['id']) }}">Play {{game['turnnum']}} </a>
+                    <a class="action" href="{{ url_for('player.submit', id=player['id']) }}">Submit Turn {{game['turnnum']}} </a>
+                {% else %}
+                    <P>{{ player['username'] }}</P>
+                {% endif %}
+            {% endfor %}
           {% endif %}
           {% if (openseats is defined) and openseats[game['id']] %}
-          <P>open seats {{openseats[game['id']]|length}} :
-          {% for openseat in openseats[game['id']] %}
-            <a class="action" href="{{ url_for('player.join', id=openseat['id']) }}">playernumber {{ openseat['playernumber'] }}</a>
-          {% endfor %}
+            <P>open seats {{openseats[game['id']]|length}} :
+            {% for openseat in openseats[game['id']] %}
+                <a class="action" href="{{ url_for('player.join', id=openseat['id']) }}">playernumber {{ openseat['playernumber'] }}</a>
+            {% endfor %}
           {% endif %}
           </P>
           </div>

@@ -46,7 +46,7 @@ def init_db():
     from werkzeug.security import generate_password_hash
 
     user_ids = {}
-    for username in ('tim','mark','matt','stephan'):
+    for username in ('referee','tim','mark','matt','stephan'):
         db.execute(
             "INSERT INTO user (username, password) VALUES (?, ?)",
             (username, generate_password_hash('test')),
@@ -63,11 +63,13 @@ def init_db():
             .fetchone()
         )['id']
 
+    referee_id = 1
+
     game_ids = {}
     for gamename in ('game01','game02'):
         db.execute(
-            "INSERT INTO game (gamename,summary,playercount) VALUES (?,?,?)",
-            (gamename,"a summary", 3 ),
+            "INSERT INTO game (gamename,summary,playercount,referee_id) VALUES (?,?,?,?)",
+            (gamename,"an exciting game!", 2, referee_id),
         )
         db.commit()
 

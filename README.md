@@ -8,3 +8,9 @@ python3 -m venv venv
 pip install Flask
 
 https://www.reddit.com/r/flask/comments/ab7i9d/how_to_make_the_unity_webgl_build_work_with_flask/
+
+#use bash
+. venv/bin/activate
+export FLASK_APP=flaskapp
+export FLASK_ENV=development
+flask run

@@ -20,9 +20,11 @@ bp = Blueprint("intro", __name__)
 def index():
     db = get_db()
     games = db.execute(
-        "SELECT id, gamename, created, summary"
-        " FROM game"
-        " ORDER BY created DESC"
+        "SELECT g.id, gamename, g.created, summary, username, referee_id"
+        " FROM game g"
+        " JOIN user u" 
+        " ON g.referee_id = u.id"
+        " ORDER BY g.created DESC"
     ).fetchall()
 
 
@@ -75,3 +77,19 @@ def players():
     if request.args.get('type') == 'json':
         return jsonify(players)
     return render_template("intro/index.html",players=players)
+
+@bp.route("/myplayers")
+def myplayers():
+    db = get_db()
+    players = db.execute(
+        "SELECT p.id, gamename, p.user_id, playernumber"
+        " FROM player p"
+        " JOIN game g" 
+        " ON p.user_id = ? AND p.game_id = g.id",(g.user['id'],),
+    ).fetchall()
+
+    return jsonify( {"Items":players} )
+
+    # if request.args.get('type') == 'json':
+        # return jsonify(players)
+    # return render_template("intro/index.html",players=players)

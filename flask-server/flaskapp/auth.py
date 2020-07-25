@@ -13,6 +13,8 @@ from werkzeug.security import generate_password_hash
 
 from flaskapp.db import get_db
 
+from flask import jsonify
+
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
@@ -109,14 +111,24 @@ def login():
             # store the user id in a new session and return to the index
             session.clear()
             session["user_id"] = user["id"]
+
+            if request.args.get('type') == 'json':
+                return myprofile()
+                
             return redirect(url_for("index"))
-            # return {
-            #     "score" : user["score"]
-            # }
 
         flash(error)
 
     return render_template("auth/login.html")
+
+@bp.route("/myprofile") #, methods=("GET", "POST"))
+@login_required
+def myprofile():
+    db = get_db()
+    user = db.execute(
+        "SELECT id, username, created FROM user WHERE id = ?", (g.user['id'],)
+    ).fetchone()
+    return jsonify(user)
 
 @bp.route("/logout")
 def logout():

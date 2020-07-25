@@ -14,10 +14,11 @@ from flask import jsonify
 
 bp = Blueprint("player", __name__, url_prefix="/player")
 
-@bp.route('/play')
+@bp.route('/<int:id>/play')
 @login_required
-def game():
-    return render_template("game/play.html")
+def play(id):
+    return render_template("player/play.html")
+    # return render_template("game/play.html?player={0}".format(id))
 
 @bp.route("/<int:id>/join") #, methods=("GET", "POST"))
 @login_required
@@ -46,10 +47,10 @@ def join(id):
     db.commit()
 
     player = get_player(id, check_user=False)
-    return jsonify(player)
+    return jsonify(player)  
 
-@bp.route("/<int:id>/submit", methods=("GET", "POST"))
 @login_required
+@bp.route("/<int:id>/submit", methods=("GET", "POST"))
 def submit(id):
     """Update a post if the current user is the author."""
     db = get_db()
@@ -86,7 +87,7 @@ def submit(id):
 
     # return jsonify(player)
 
-    return render_template("game/submit.html", player=player)   
+    return render_template("game/submit.html", player=player)  
 
 def get_player(id, check_user=True):
     """Get a post and its author by id.

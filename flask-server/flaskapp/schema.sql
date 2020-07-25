@@ -14,12 +14,14 @@ CREATE TABLE user (
 
 CREATE TABLE game (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  referee_id INTEGER,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   summary TEXT NOT NULL,
   gamename TEXT NOT NULL,
   playercount INTEGER NOT NULL,
   turnnum INTEGER,
-  turndata TEXT
+  turndata TEXT,
+  FOREIGN KEY (referee_id) REFERENCES user (id)
 );
 
 CREATE TABLE player (
