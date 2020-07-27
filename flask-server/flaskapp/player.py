@@ -50,6 +50,20 @@ def join(id):
     return jsonify(player)  
 
 @login_required
+@bp.route("/<int:id>/commanddata", methods=("GET", "POST"))
+def commanddata(id):
+    """Update a post if the current user is the author."""
+    db = get_db()
+    player = db.execute(
+        "SELECT commanddata"
+        " FROM player p"
+        " WHERE p.id = (?)",(id,),
+        ).fetchone() 
+
+    return jsonify(player)
+
+
+@login_required
 @bp.route("/<int:id>/submit", methods=("GET", "POST"))
 def submit(id):
     """Update a post if the current user is the author."""

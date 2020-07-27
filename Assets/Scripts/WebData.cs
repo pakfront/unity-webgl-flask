@@ -19,6 +19,18 @@ namespace Vgo
         public int id;
         public string gamename;
         public int turnnum;
+        public string turndata;
+
+        public void PostJsonDeserialize()
+        {
+            // Debug.LogError("Not implemented");
+            //JsonUtility.FromJsonOverwrite(turnnum, ordersQueue);
+        }
+
+        public void RunSimulation()
+        {
+            Debug.LogError("Not implemented");
+        }
     }
 
     [System.Serializable]
@@ -28,13 +40,28 @@ namespace Vgo
         public string gamename;
         public int playernumber;
         public string username;
-        public int commanddata;
+        public string commanddata;
+        public OrdersQueue ordersQueue;
         public int viewdata;
+
+        public void PostJsonDeserialize()
+        {
+            JsonUtility.FromJsonOverwrite(commanddata, ordersQueue);
+        }
+
     }
 
     [System.Serializable]
-    public class Players
+    public class OrdersQueue
     {
-        public Player[] players;
+        public EChoice[] choices = new EChoice[3];
+
     }
+
+
+
+
+    public enum EChoice { None, Forward, Left, Right }
+
+
 }

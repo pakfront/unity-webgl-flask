@@ -121,6 +121,124 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &396495378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 396495380}
+  - component: {fileID: 396495379}
+  - component: {fileID: 396495382}
+  - component: {fileID: 396495381}
+  m_Layer: 0
+  m_Name: WebReferee
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &396495379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396495378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2364fd2eaa22b4f1fb7de8f670d4cbc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    id: 0
+    username: tim
+    password: test
+  game:
+    id: 0
+    gamename: 
+    turnnum: 0
+  player:
+    id: 0
+    gamename: 
+    playernumber: 0
+    username: 
+    commanddata: 
+    ordersQueue:
+      choices: 000000000000000000000000
+    viewdata: 0
+  myPlayers: []
+  urlbase: http://127.0.0.1:5000
+  args: ?type=json
+  sessionCookie: 
+--- !u!4 &396495380
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396495378}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &396495381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396495378}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0bc31e6a2e3e4d20a57bc9cf77eb19b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user:
+    id: 0
+    username: tim
+    password: test
+  game:
+    id: 0
+    gamename: 
+    turnnum: 0
+  myPlayers: []
+  urlbase: http://127.0.0.1:5000
+  args: ?type=json
+  sessionCookie: 
+--- !u!114 &396495382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396495378}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9377d04b9c854478192ea7a965e521f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  game:
+    id: 0
+    gamename: 
+    turnnum: 0
+  player:
+    id: 0
+    gamename: 
+    playernumber: 0
+    username: 
+    commanddata: 
+    ordersQueue:
+      choices: 000000000000000000000000
+    viewdata: 0
+  myPlayers: []
+  urlbase: http://127.0.0.1:5000
+  args: ?type=json
 --- !u!1 &873550741
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1191798128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,10 +363,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   user:
     id: 0
-    name: tim
+    username: matt
     password: test
-    score: 0
+  game:
+    id: 0
+    gamename: 
+    turnnum: 0
+  player:
+    id: 0
+    gamename: 
+    playernumber: 0
+    username: 
+    commanddata: 
+    ordersQueue:
+      choices: 000000000000000000000000
+    viewdata: 0
+  myPlayers: []
   urlbase: http://127.0.0.1:5000
+  args: ?type=json
   sessionCookie: 
 --- !u!4 &1191798129
 Transform:

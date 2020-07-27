@@ -7,58 +7,60 @@ namespace Vgo
 {
     public class WebClient : MonoBehaviour
     {
-        public User user;
-        public Game game;
-        public Player player;
 
+        public User user;
         public Player[] myPlayers;
 
-        public string urlbase = "http://127.0.0.1:5000";
-        public string args = "?type=json";
+        [SerializeField] private string urlbase = "http://127.0.0.1:5000";
+        [SerializeField] private string args = "?type=json";
 
-        public string sessionCookie;
+        internal bool isWaiting;
+
+        WebPlayer webPlayer;
+        WebReferee webReferee;
+
         void Start()
         {
+            webPlayer = GetComponentInChildren<WebPlayer>();
+            webReferee = GetComponentInChildren<WebReferee>();
+            webPlayer.enabled = false;
+            webReferee.enabled = false;
             Debug.Log("WebClient url: " + Application.absoluteURL);
             Debug.Log("Application.platform:" + Application.platform);
-
-
-            // #if UNITY_WEBGL
-            //             //deduce the webstie name. there more robust ways to do this, it should be done in the index.html wrapper
-            //             if (Application.platform == RuntimePlatform.WebGLPlayer)
-            //             {
-            //                 string[] parts = Application.absoluteURL.Split('/');
-            //                 urlbase = parts[0] + "://" + parts[2];
-            //                 StartCoroutine(GetUserInfo());
-            //             }
-            //             else
-            //             {
-            //                 string[] parts = urlbase.Split('/');
-            //                 urlbase = parts[0] + "://" + parts[2];
-            //             }
-            // #endif
-
         }
 
+        public string GetUrl(string route)
+        {
+            string url = urlbase + route + args; 
+            Debug.Log(url);
+            return url;
+        }
+
+        public IEnumerator SendWebRequest(UnityWebRequest www)
+        {
+            isWaiting = true;
+            yield return www.SendWebRequest();
+            isWaiting = false;
+            if (www.isNetworkError || www.isHttpError)
+            {
+                Debug.LogError(www.url+" : "+www.error);
+                //TODO show error in ui
+                yield break;
+            }
+            Debug.Log(www.downloadHandler.text);
+        }
 
         private IEnumerator Login()
         {
-
             UnityWebRequest www = UnityWebRequest.Post(
-                urlbase + "/auth/login" + args,
+                GetUrl("/auth/login"),
                 new List<IMultipartFormSection> {
                 new MultipartFormDataSection("username", user.username),
                 new MultipartFormDataSection("password", user.password),
                 }
             );
-            yield return www.SendWebRequest();
 
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.Log(urlbase + "/auth/login" + args + ":" + www.error);
-                yield break;
-
-            }
+            yield return this.SendWebRequest(www);
 
             string json = www.downloadHandler.text;
             Debug.Log(json);
@@ -67,54 +69,6 @@ namespace Vgo
             foreach (var s in www.GetResponseHeaders())
             {
                 Debug.Log("s=" + s);
-            }
-        }
-
-        private IEnumerator GetMyPlayers()
-        {
-
-            UnityWebRequest www = UnityWebRequest.Get(urlbase + "/myplayers");
-            Debug.Log(www.url);
-
-
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                // Show results as text
-                string json = www.downloadHandler.text;
-                Debug.Log(json);
-                myPlayers = JsonHelper.FromJson<Player>(json);
-                // Debug.Log(JsonUtility.FromJson<Players>(json));
-            }
-        }
-
-        IEnumerator GetUserInfo()
-        {
-            UnityWebRequest www = UnityWebRequest.Get(urlbase + "/auth/myprofile?type=json");
-            Debug.Log(www.url);
-
-            yield return www.SendWebRequest();
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.LogError(www.error);
-            }
-            else
-            {
-                // Show results as text
-                string json = www.downloadHandler.text;
-                Debug.Log(json);
-                // User [] users = JsonHelper.FromJson<User>(json);
-
-                // user = users[0];
-                JsonUtility.FromJsonOverwrite(json, user);
-                // // Or retrieve results as binary data
-                // byte[] results = www.downloadHandler.data;
             }
         }
 
@@ -142,28 +96,19 @@ namespace Vgo
                 return;
             }
 
-            if (player.id == 0)
+            if (GUI.Button(new Rect(10, y += h, w, h), "Player"))
             {
-                if (myPlayers == null || myPlayers.Length == 0)
-                {
-                    if (GUI.Button(new Rect(10, y += h, w, h), "GetMyPlayers"))
-                    {
-                        StartCoroutine(GetMyPlayers());
-                    }
-                    return;
-                }
-
-                for (int i = 0; i < myPlayers.Length; i++)
-                {
-                    if (GUI.Button(new Rect(10, y += h, w, h), myPlayers[i].gamename+" "+myPlayers[i].playernumber))
-                    {
-                        player = myPlayers[i];
-                    }
-                }
-                return;
+                webPlayer.enabled = true;
+                this.enabled = false;
             }
 
+            if (GUI.Button(new Rect(10, y += h, w, h), "Referee"))
+            {
+                webReferee.enabled = true;
+                this.enabled = false;
+            }
         }
+
 
     }
 }

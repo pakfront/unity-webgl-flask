@@ -14,9 +14,9 @@ from flask import jsonify
 
 bp = Blueprint("referee", __name__, url_prefix="/referee")
 
-@bp.route("/<int:id>/turndata", methods=("GET", "POST"))
+@bp.route("/<int:id>/submitturndata", methods=("GET", "POST"))
 @login_required
-def turndata(id):
+def submitturndata(id):
     #TODO make sure g.user is a referee
     db = get_db()
     game = db.execute(
@@ -48,10 +48,9 @@ def turndata(id):
 
     return jsonify(game)
 
-@bp.route("/<int:id>/commanddata", methods=("GET", "POST"))
+@bp.route("/<int:id>/commanddata")
 @login_required
 def commanddata(id):
-    #TODO make sure g.user is a referee
     db = get_db()
 
     game = db.execute(
@@ -64,11 +63,26 @@ def commanddata(id):
         abort(403)
         
     players = db.execute(
-        "SELECT p.id, playernumber, commanddata, p.user_id, p.game_id"
+        "SELECT p.id, commanddata"
         " FROM player p"
         " WHERE p.game_id = (?)",(id,),
         ).fetchall()
 
-    return jsonify(players)
+    return jsonify({"Items":players})
     # return jsonify([tuple(row) for row in player[0]])
 
+@bp.route("/<int:id>/turndata")
+@login_required
+def turndata(id):
+    db = get_db()
+
+    game = db.execute(
+        "SELECT id, referee_id, turndata"
+        " FROM game g"
+        " WHERE g.id = (?)",(id,),
+        ).fetchone()
+
+    if game["referee_id"] != g.user["id"]:
+        abort(403)
+
+    return jsonify(game)

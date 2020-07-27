@@ -15,9 +15,10 @@
             players {{players[game['id']]|length}}:
             {% for player in players[game['id']] %}
                 {% if g.user['id'] == player['user_id'] %}
+                    <P>{{ player['username'] }}
                     <a class="action" href="{{ url_for('player.play', id=player['id']) }}">Play {{game['turnnum']}} </a>
                     <a class="action" href="{{ url_for('player.submit', id=player['id']) }}">Submit Turn {{game['turnnum']}} </a>
-                {% else %}
+                  {% else %}
                     <P>{{ player['username'] }}</P>
                 {% endif %}
             {% endfor %}

@@ -90,6 +90,17 @@ def myplayers():
 
     return jsonify( {"Items":players} )
 
+@bp.route("/mygames")
+def mygames():
+    db = get_db()
+    games = db.execute(
+        "SELECT g.id, gamename, turnnum"
+        " FROM game g"
+        " WHERE g.referee_id = ?",(g.user['id'],),
+    ).fetchall()
+
+    return jsonify( {"Items":games} )
+
     # if request.args.get('type') == 'json':
         # return jsonify(players)
     # return render_template("intro/index.html",players=players)
