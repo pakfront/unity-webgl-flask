@@ -101,7 +101,7 @@ def submit(id):
 
     # return jsonify(player)
 
-    return render_template("game/submit.html", player=player)  
+    return render_template("player/submit.html", player=player)  
 
 def get_player(id, check_user=True):
     """Get a post and its author by id.

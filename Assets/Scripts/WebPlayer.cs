@@ -32,6 +32,7 @@ namespace Vgo
             );
 
             yield return webClient.SendWebRequest(www);
+            if (www.isNetworkError || www.isHttpError) yield break;
 
             string json = www.downloadHandler.text;
             Debug.Log(json);
@@ -49,6 +50,7 @@ namespace Vgo
             UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/myplayers"));
 
             yield return webClient.SendWebRequest(www);
+            if (www.isNetworkError || www.isHttpError) yield break;
 
             string json = www.downloadHandler.text;
             myPlayers = JsonHelper.FromJson<Player>(json);
@@ -61,6 +63,7 @@ namespace Vgo
             UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl(player.id+"/commanddata"));
 
             yield return webClient.SendWebRequest(www);
+            if (www.isNetworkError || www.isHttpError) yield break;
 
             string json = www.downloadHandler.text;
             JsonUtility.FromJsonOverwrite(json, player);

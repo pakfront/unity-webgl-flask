@@ -24,6 +24,7 @@ namespace Vgo
             UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/mygames"));
 
             yield return webClient.SendWebRequest(www);
+            if (www.isNetworkError || www.isHttpError) yield break;
 
             // Show results as text
             string json = www.downloadHandler.text;
@@ -34,18 +35,20 @@ namespace Vgo
         {
 
             {
-                UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/referee/" + game.id + "/turndata"));
+                UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/referee/game/" + game.id + "/turndata"));
 
                 yield return webClient.SendWebRequest(www);
+                if (www.isNetworkError || www.isHttpError) yield break;
 
                 string json = www.downloadHandler.text;
                 JsonUtility.FromJsonOverwrite(json, game);
             }
 
             {
-                UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/referee/" + game.id + "/commanddata"));
+                UnityWebRequest www = UnityWebRequest.Get(webClient.GetUrl("/referee/game/" + game.id + "/commanddata"));
 
                 yield return webClient.SendWebRequest(www);
+                if (www.isNetworkError || www.isHttpError) yield break;
 
                 string json = www.downloadHandler.text;
                 players = JsonHelper.FromJson<Player>(json);
@@ -54,9 +57,36 @@ namespace Vgo
                     players[i].PostJsonDeserialize();
                 }
             }
-
-
         }
+
+        private IEnumerator PostGameData()
+        {
+
+            {
+                UnityWebRequest www = UnityWebRequest.Post(
+                    webClient.GetUrl("/referee/game/" + game.id + "/turndata"),
+                    new List<IMultipartFormSection> {
+                new MultipartFormDataSection("turndata", game.turndata),
+                new MultipartFormDataSection("turnnum", game.turnnum.ToString()),
+                    }
+                );
+                yield return webClient.SendWebRequest(www);
+                if (www.isNetworkError || www.isHttpError) yield break;
+            }
+
+            foreach (Player player in players)
+            {
+                UnityWebRequest www = UnityWebRequest.Post(
+                    webClient.GetUrl("/referee/player/" + player.id + "/viewdata"),
+                    new List<IMultipartFormSection> {
+                new MultipartFormDataSection("viewdata", player.viewdata),
+                    }
+                );
+                yield return webClient.SendWebRequest(www);
+                if (www.isNetworkError || www.isHttpError) yield break;
+            }
+        }
+
 
         void OnGUI()
         {
@@ -96,7 +126,9 @@ namespace Vgo
 
             if (GUI.Button(new Rect(10, y += h, w, h), "Simulate " + game.gamename))
             {
-                game.RunSimulation();
+                game.RunSimulation(players);
+                StartCoroutine(PostGameData());
+
             }
         }
 

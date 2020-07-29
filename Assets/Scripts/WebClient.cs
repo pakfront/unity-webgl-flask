@@ -61,6 +61,8 @@ namespace Vgo
             );
 
             yield return this.SendWebRequest(www);
+            if (www.isNetworkError || www.isHttpError) yield break;
+
 
             string json = www.downloadHandler.text;
             Debug.Log(json);
